@@ -6,18 +6,21 @@
 import processing.opengl.*;
 import java.util.Set;
 
-TMesh mesh;
-TMesh mesh2;
 ArrayList<TMesh> allSpheres = new ArrayList();
-float multiplier;
+ArrayList<PVector> allPaths = new ArrayList();
+ArrayList<PVector> allEndPoints = new ArrayList();
+float multiplier = 0;
 
 float sphereSize = 50;
 int sphereRes = 20;
+int totalSpheres = 8;
 PVector centroid;
 PVector end1;
 PVector location;
 PVector path;
 boolean away = true;
+
+boolean normals = false;
 
 void setup() {
 
@@ -29,32 +32,20 @@ void setup() {
   // Create new mesh factory
   TMeshFactory meshFactory = new TMeshFactory();
   
-  // Create a new mesh object
-  mesh = new TMesh();
-  
-  // Create sphere: createSphere(int iDimU, int iDimV, float iRadius) {
-  mesh = meshFactory.createSphere( sphereRes, sphereRes, sphereSize );
-  allSpheres.add( mesh );
-  
-  // Sphere Position set at centroid
-  mesh.setPosition( centroid );
-  
-  // pick a random end position within a certain radius from the centroid
-  end1 = new PVector( centroid.x + 300, centroid.y + 300, centroid.z + 300 );
-  
-  // subtract the vectors to get a direction
-  path = PVector.sub( end1, centroid );
-  path.normalize();
-   
-  mesh2 = new TMesh();
-  mesh2 = meshFactory.createSphere( sphereRes, sphereRes, sphereSize );
-  
-  multiplier = 0;
-  location = new PVector( centroid.x + (path.x * multiplier), centroid.y + (path.y * multiplier), centroid.z + (path.z * multiplier) );
-  
-  mesh2.setPosition ( location );
-  mesh2.draw();
-
+ 
+  for( int i = 0; i < totalSpheres; i++ ) 
+  {
+    TMesh mesh = new TMesh();
+    mesh = meshFactory.createSphere( sphereRes, sphereRes, sphereSize );
+    allSpheres.add( mesh );
+    
+    PVector endPoint = new PVector( centroid.x + random(-300, 300), centroid.y + random(-300, 300), centroid.z + random(-300, 300) );
+    PVector path = PVector.sub( endPoint, centroid );
+    path.normalize();
+    allPaths.add( path );
+    allEndPoints.add( endPoint );
+  }
+ 
 }
 
 void draw() {
@@ -63,21 +54,25 @@ void draw() {
  stroke( 255, 0, 0 );
  fill( 0, 255, 0 );
   
- mesh.draw();
- 
- PVector location = new PVector( centroid.x + (path.x * multiplier), centroid.y + (path.y * multiplier), centroid.z + (path.z * multiplier) );
-
- mesh2.setPosition ( location );
- mesh2.draw();
- 
- if( multiplier > 300 || multiplier < 0 ) {
-  away = !away;  
- } 
- 
- if( away ) {
-  multiplier += 1; 
- } else {
-  multiplier -= 1; 
+ for( int i = 0; i < totalSpheres; i++ )
+ {
+   TMesh thisSphere = allSpheres.get( i );
+   PVector path = allPaths.get( i ); 
+   PVector location = new PVector( centroid.x + (path.x * multiplier), centroid.y + (path.y * multiplier), centroid.z + (path.z * multiplier) );
+   thisSphere.setPosition ( location );
+   thisSphere.draw();
  }
+ 
+ if( multiplier > 300 || multiplier < 0 ) 
+   {
+    away = !away;  
+   } 
+   
+   if( away ) 
+   {
+    multiplier += 1; 
+   } else {
+    multiplier -= 1; 
+   }
    
 }

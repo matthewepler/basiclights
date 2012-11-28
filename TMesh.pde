@@ -79,6 +79,7 @@ class TMesh extends NodeGeom {
     }
     
     // DRAW NORMALS (for debug purposes)
+    if( normals ) {
     stroke( 0, 0, 255 );
     float tNormLen = 20.0;
     int vCount = mVertices.size();
@@ -90,6 +91,7 @@ class TMesh extends NodeGeom {
     }
     endShape();
     stroke( 255, 0, 0 );
+  }
   }
   
   Vert getVertex(int iIndex) {
