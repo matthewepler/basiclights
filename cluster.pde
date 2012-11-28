@@ -8,8 +8,11 @@ import java.util.Set;
 
 TMesh mesh;
 TMesh mesh2;
+ArrayList<TMesh> allSpheres = new ArrayList();
 float multiplier;
 
+float sphereSize = 50;
+int sphereRes = 20;
 PVector centroid;
 PVector end1;
 PVector location;
@@ -30,7 +33,8 @@ void setup() {
   mesh = new TMesh();
   
   // Create sphere: createSphere(int iDimU, int iDimV, float iRadius) {
-  mesh = meshFactory.createSphere(20, 20, 100) ;
+  mesh = meshFactory.createSphere( sphereRes, sphereRes, sphereSize );
+  allSpheres.add( mesh );
   
   // Sphere Position set at centroid
   mesh.setPosition( centroid );
@@ -43,7 +47,7 @@ void setup() {
   path.normalize();
    
   mesh2 = new TMesh();
-  mesh2 = meshFactory.createSphere( 20, 20, 100 );
+  mesh2 = meshFactory.createSphere( sphereRes, sphereRes, sphereSize );
   
   multiplier = 0;
   location = new PVector( centroid.x + (path.x * multiplier), centroid.y + (path.y * multiplier), centroid.z + (path.z * multiplier) );
